@@ -12,7 +12,9 @@ user_model = api.model('User', {
     'first_name': fields.String(required=True),
     'last_name': fields.String(required=True),
     'role': fields.String(required=True),
-    'is_active': fields.Boolean(required=True)
+    'is_active': fields.Boolean(required=True),
+    'created_at': fields.DateTime(readonly=True),
+    'updated_at': fields.DateTime(readonly=True)
 })
 
 @api.route('/')
