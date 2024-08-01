@@ -73,7 +73,7 @@ class UserResource(Resource):
 
         db.session.delete(user)
         db.session.commit()
-        return '', 204
+        return {'message': 'User deleted'}, 200
 
 @api.route('/promote/<int:id>')
 class PromoteUser(Resource):
