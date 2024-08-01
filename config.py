@@ -8,7 +8,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
-    JWT_ACCESS_TOKEN_EXPIRES = 3600  # Token expires after 1 hour
+    JWT_ACCESS_TOKEN_EXPIRES = 3600  # 1 hour
 
 class DevelopmentConfig(Config):
     DEBUG = True
