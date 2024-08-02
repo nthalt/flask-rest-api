@@ -6,7 +6,7 @@ from app.models import User
 from app import db
 from app.utils import send_reset_email
 
-api = Namespace('auth', description='Authentication operations')
+api = Namespace('auth', description='Authentication operations', security='Bearer')
 
 register_model = api.model('Register', {
     'username': fields.String(required=True),

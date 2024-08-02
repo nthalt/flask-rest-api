@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models import User
 from app import db
 
-api = Namespace('users', description='User operations')
+api = Namespace('users', description='User operations', security='Bearer')
 
 user_model = api.model('User', {
     'id': fields.Integer(readonly=True),
