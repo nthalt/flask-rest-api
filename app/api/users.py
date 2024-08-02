@@ -21,6 +21,7 @@ user_model = api.model('User', {
 class UserList(Resource):
     @api.marshal_list_with(user_model)
     @jwt_required()
+    @api.doc(security='Bearer Auth')
     def get(self):
         current_user = User.query.get(get_jwt_identity())
         if current_user.role != 'Admin':
@@ -31,6 +32,7 @@ class UserList(Resource):
 class UserResource(Resource):
     @api.marshal_with(user_model)
     @jwt_required()
+    @api.doc(security='Bearer Auth')
     def get(self, id):
         current_user = User.query.get(get_jwt_identity())
         if current_user.role != 'Admin' and current_user.id != id:
@@ -40,6 +42,7 @@ class UserResource(Resource):
     @api.expect(user_model)
     @api.marshal_with(user_model)
     @jwt_required()
+    @api.doc(security='Bearer Auth')
     def put(self, id):
         current_user = User.query.get(get_jwt_identity())
         user = User.query.get_or_404(id)
@@ -61,6 +64,7 @@ class UserResource(Resource):
         return user
 
     @jwt_required()
+    @api.doc(security='Bearer Auth')
     def delete(self, id):
         current_user = User.query.get(get_jwt_identity())
         user = User.query.get_or_404(id)
@@ -78,6 +82,7 @@ class UserResource(Resource):
 @api.route('/promote/<int:id>')
 class PromoteUser(Resource):
     @jwt_required()
+    @api.doc(security='Bearer Auth')
     def post(self, id):
         current_user = User.query.get(get_jwt_identity())
         if current_user.role != 'Admin':

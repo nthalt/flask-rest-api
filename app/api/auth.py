@@ -161,6 +161,7 @@ class ChangePassword(Resource):
         'current_password': fields.String(required=True),
         'new_password': fields.String(required=True)
     }))
+    @api.doc(security='Bearer Auth')
     def post(self):
         current_user = User.query.get(get_jwt_identity())
         data = request.json
