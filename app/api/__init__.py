@@ -8,7 +8,7 @@ api = Api(api_bp,
     title='User Management API',
     version='1.0',
     description='A simple user management API with Role-based access control',
-    doc='/swagger/'
+    doc='//'
 )
 
 api.add_namespace(auth_ns)

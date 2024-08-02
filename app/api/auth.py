@@ -1,9 +1,10 @@
 from flask_restx import Namespace, Resource, fields
-from flask import request
-from flask_jwt_extended import create_access_token
+from flask import request, current_app
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 import re
 from app.models import User
 from app import db
+from app.utils import send_reset_email
 
 api = Namespace('auth', description='Authentication operations')
 
@@ -18,6 +19,15 @@ register_model = api.model('Register', {
 login_model = api.model('Login', {
     'username': fields.String(required=True),
     'password': fields.String(required=True)
+})
+
+forgot_password_model = api.model('ForgotPassword', {
+    'email': fields.String(required=True)
+})
+
+reset_password_model = api.model('ResetPassword', {
+    'token': fields.String(required=True),
+    'new_password': fields.String(required=True)
 })
 
 def is_valid_email(email):
@@ -114,4 +124,55 @@ class Login(Resource):
             return {'access_token': access_token}, 200
         return {'message': 'Invalid credentials'}, 401
 
+@api.route('/forgot-password')
+class ForgotPassword(Resource):
+    @api.expect(forgot_password_model)
+    def post(self):
+        data = request.json
+        user = User.query.filter_by(email=data['email']).first()
+        if not user:
+            return {'message': 'If a user with this email exists, a password reset link has been sent.'}, 200
+        
+        token = user.generate_reset_token()
+        send_reset_email(user.email, token)
+        return {'message': 'If a user with this email exists, a password reset link has been sent.'}, 200
+
+@api.route('/reset-password')
+class ResetPassword(Resource):
+    @api.expect(reset_password_model)
+    def post(self):
+        data = request.json
+        user = User.query.filter_by(password_reset_token=data['token']).first()
+        if not user or not user.verify_reset_token(data['token']):
+            return {'message': 'Invalid or expired token'}, 400
+        
+        if not is_valid_password(data['new_password']):
+            return {'message': 'Password must be at least 8 characters long'}, 400
+        
+        user.set_password(data['new_password'])
+        user.clear_reset_token()
+        db.session.commit()
+        return {'message': 'Password has been reset successfully'}, 200
+
+@api.route('/change-password')
+class ChangePassword(Resource):
+    @jwt_required()
+    @api.expect(api.model('ChangePassword', {
+        'current_password': fields.String(required=True),
+        'new_password': fields.String(required=True)
+    }))
+    def post(self):
+        current_user = User.query.get(get_jwt_identity())
+        data = request.json
+        
+        if not current_user.check_password(data['current_password']):
+            return {'message': 'Current password is incorrect'}, 400
+        
+        if not is_valid_password(data['new_password']):
+            return {'message': 'New password must be at least 8 characters long'}, 400
+        
+        current_user.set_password(data['new_password'])
+        db.session.commit()
+        return {'message': 'Password changed successfully'}, 200
+        
 # Implement password reset endpoints here
