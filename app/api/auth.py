@@ -176,4 +176,3 @@ class ChangePassword(Resource):
         db.session.commit()
         return {'message': 'Password changed successfully'}, 200
         
-# Implement password reset endpoints here
