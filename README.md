@@ -1,11 +1,359 @@
-To run your application normally:
+# Flask REST API with User Management
+
+This project is a JSON RESTful API built with Flask, following OpenAPI standards. It uses PostgreSQL with SQLAlchemy for database management and includes user authentication and management features.
+
+## Task Description
+
+The API is built using Flask and PostgreSQL with SQLAlchemy. It provides user management functionalities including registration, sign-in, password reset, and admin-level user management.
+
+## Features
+
+1. Utilizes appropriate REST methods
+2. Uses SQLAlchemy and PostgreSQL for database models and schema
+3. Implements user registration, sign-in, and password reset functionalities
+4. Admin users can modify, delete, activate, and deactivate non-admin users
+5. User information stored includes:
+    - Username (varchar)
+    - User First Name (varchar)
+    - User Last Name (varchar)
+    - Password (encrypted, varchar)
+    - Email (varchar)
+    - Role (Admin/User, Enum)
+    - Create date (datetime, auto-insert)
+    - Update date (datetime, auto-update during REST API calls)
+    - Active status (Boolean)
+6. Implements JWT Token authentication
+
+## Setup and Installation
+
+1. Clone the repository:
+
+git clone <https://github.com/nthalt/flask-rest-api.git>
+cd <flask-rest-api>
+
+2. Create and activate a virtual environment:
 
 ```python
+python -m venv venv
+source venv/bin/activate  # On Windows use venv\Scripts\activate
+```
+
+3. Install the required packages:
+
+```
+pip install -r requirements.txt
+```
+
+4. Set up your PostgreSQL database and update the `.env` file with your database URL:
+
+```
+DATABASE_URL=postgresql://DATABASE_username:DATABASE_password@localhost:5432/DATABASE_name
+```
+
+5. Set other environment variables in the `.env` file:
+
+```
+SECRET_KEY=your_secret_key
+JWT_SECRET_KEY=your_jwt_secret_key
+```
+
+6. Run the application:
+
+```
 python run.py run
 ```
 
+The application will create the necessary database and tables if they don't exist.
+
 To create an admin user:
 
-```python
+```bash
 python run.py create_admin
 ```
+
+## API Documentation
+
+The API follows OpenAPI standards and provides JSON responses. You can access the Swagger UI documentation at `/swagger/` when running the application.
+
+### Endpoints
+
+#### Authentication
+
+-   **POST /auth/register** - Register a new user
+-   **POST /auth/login** - User login
+-   **POST /auth/forgot-password** - Request password reset
+-   **POST /auth/reset-password** - Reset password
+-   **POST /auth/change-password** - Change password
+
+#### Users
+
+-   **GET /users/** - Get all users (Admin only)
+-   **GET /users/<id>** - Get user by ID (Admin or own user)
+-   **PUT /users/<id>** - Update user (Admin or own user)
+-   **DELETE /users/<id>** - Delete user (Admin only)
+-   **POST /users/promote/<id>** - Promote user to Admin (Admin only)
+
+### Authentication
+
+The API uses JWT tokens for authentication. Include the token in the Authorization header of your requests:
+
+Authorization: Bearer <your_jwt_token>
+
+### Testing Instructions
+
+#### Register a New User
+
+**Method:** POST  
+**URL:** `/auth/register`  
+**Example:**
+
+```bash
+curl -X POST http://localhost:5000/auth/register \
+-H "Content-Type: application/json" \
+-d '{"username": "john_doe", "password": "SecureP@ssw0rd", "email": "john@example.com", "first_name": "John", "last_name": "Doe"}'
+```
+
+Expected Response:
+
+```json
+{
+    "message": "User created successfully"
+}
+```
+
+#### User Login
+
+Method: POST
+URL: /auth/login
+Example:
+
+```bash
+curl -X POST http://localhost:5000/auth/login \
+-H "Content-Type: application/json" \
+-d '{"username": "john_doe", "password": "SecureP@ssw0rd"}'
+```
+
+Expected Response:
+
+```json
+{
+    "access_token": "your_jwt_token"
+}
+```
+
+#### Request Password Reset
+
+Method: POST
+URL: /auth/forgot-password
+Example:
+
+```bash
+
+curl -X POST http://localhost:5000/auth/forgot-password \
+-H "Content-Type: application/json" \
+-d '{"email": "john@example.com"}'
+```
+
+Expected Response:
+
+```json
+{
+    "message": "If a user with this email exists, a password reset link has been sent."
+}
+```
+
+#### Reset Password
+
+Method: POST
+URL: /auth/reset-password
+Example:
+
+```bash
+
+curl -X POST http://localhost:5000/auth/reset-password \
+-H "Content-Type: application/json" \
+-d '{"token": "reset_token", "new_password": "NewSecureP@ssw0rd"}'
+```
+
+Expected Response:
+
+```json
+{
+    "message": "Password has been reset successfully"
+}
+```
+
+#### Change Password
+
+Method: POST
+URL: /auth/change-password
+Example:
+
+```bash
+
+curl -X POST http://localhost:5000/auth/change-password \
+-H "Authorization: Bearer your_jwt_token" \
+-H "Content-Type: application/json" \
+-d '{"current_password": "SecureP@ssw0rd", "new_password": "NewSecureP@ssw0rd"}'
+```
+
+Expected Response:
+
+```json
+{
+    "message": "Password changed successfully"
+}
+```
+
+#### Get All Users
+
+Method: GET
+URL: /users/
+Example:
+
+```bash
+
+curl -X GET http://localhost:5000/users/ \
+-H "Authorization: Bearer your_jwt_token"
+```
+
+Expected Response:
+
+```json
+[
+    {
+        "id": 1,
+        "username": "john_doe",
+        "email": "john@example.com",
+        "first_name": "John",
+        "last_name": "Doe",
+        "role": "User",
+        "is_active": true,
+        "created_at": "2024-07-05T12:00:00Z",
+        "updated_at": "2024-07-05T12:00:00Z"
+    }
+    // more users
+]
+```
+
+#### Get User by ID
+
+Method: GET
+URL: /users/<id>
+Example:
+
+```bash
+
+curl -X GET http://localhost:5000/users/1 \
+-H "Authorization: Bearer your_jwt_token"
+```
+
+Expected Response:
+
+```json
+{
+    "id": 1,
+    "username": "john_doe",
+    "email": "john@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "User",
+    "is_active": true,
+    "created_at": "2024-07-05T12:00:00Z",
+    "updated_at": "2024-07-05T12:00:00Z"
+}
+```
+
+#### Update User
+
+Method: PUT
+URL: /users/<id>
+Example:
+
+```bash
+
+curl -X PUT http://localhost:5000/users/1 \
+-H "Authorization: Bearer your_jwt_token" \
+-H "Content-Type: application/json" \
+-d '{"username": "john_doe", "email": "john@example.com", "first_name": "John", "last_name": "Doe", "role": "User", "is_active": false}'
+```
+
+Expected Response:
+
+```json
+{
+    "id": 1,
+    "username": "john_doe",
+    "email": "john@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "User",
+    "is_active": false,
+    "created_at": "2024-07-05T12:00:00Z",
+    "updated_at": "2024-07-05T12:00:00Z"
+}
+```
+
+#### Delete User
+
+Method: DELETE
+URL: /users/<id>
+Example:
+
+```bash
+
+curl -X DELETE http://localhost:5000/users/1 \
+-H "Authorization: Bearer your_jwt_token"
+```
+
+Expected Response:
+
+```json
+{
+    "message": "User deleted"
+}
+```
+
+#### Promote User to Admin
+
+Method: POST
+URL: /users/promote/<id>
+Example:
+
+```bash
+
+curl -X POST http://localhost:5000/users/promote/1 \
+-H "Authorization: Bearer your_jwt_token"
+```
+
+Expected Response:
+
+```json
+{
+    "message": "User promoted to Admin"
+}
+```
+
+## User Roles and Permissions
+
+-   **User**: Can view and edit their own information
+-   **Admin**: Can view, edit, delete, and promote all users (except deleting other admins)
+
+## Development
+
+To run the application in development mode:
+
+export FLASK_ENV=development
+python run.py
+
+## Testing
+
+(Include information about running tests once they are implemented)
+
+## Contributing
+
+(Include guidelines for contributing to the project)
+
+## License
+
+(Include license information)
