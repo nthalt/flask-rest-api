@@ -95,7 +95,7 @@ python run.py create_admin
 
 ## API Documentation
 
-The API follows OpenAPI standards and provides JSON responses. You can access the Swagger UI documentation at `http://127.0.0.1:5000/` when running the application.
+The API follows OpenAPI standards and provides JSON responses. You can access the Swagger UI documentation at [http://127.0.0.1:5000](http://127.0.0.1:5000/) when running the application.
 
 ### Endpoints
 
@@ -110,10 +110,10 @@ The API follows OpenAPI standards and provides JSON responses. You can access th
 #### Users
 
 -   **GET /users/** - Get all users (Admin only)
--   **GET /users/:id** - Get user by ID (Admin or own user)
--   **PUT /users/:id** - Update user (Admin or own user)
--   **DELETE /users/:id** - Delete user (Admin only)
--   **POST /users/promote/:id** - Promote user to Admin (Admin only)
+-   **GET /users/{id}** - Get user by ID (Admin or own user)
+-   **PUT /users/{id}** - Update user (Admin or own user)
+-   **DELETE /users/{id}** - Delete user (Admin only)
+-   **POST /users/promote/{id}** - Promote user to Admin (Admin only)
 
 ### Authentication
 
