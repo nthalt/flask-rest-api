@@ -9,7 +9,7 @@ This project is a JSON RESTful API built with Flask, following OpenAPI standards
     -   [Authentication](#authentication)
         -   [Register](#register-a-new-user)
         -   [Login](#user-login)
-        -   [Forgot Password](#request-password-reset)
+        -   [Forgot Password](#forgot-password)
         -   [Reset Password](#reset-password)
         -   [Change password](#change-password)
     -   [Users](#users)
@@ -126,9 +126,9 @@ Authorization: Bearer <your_jwt_token>
 
 #### Register a New User
 
-**Method:** POST  
-**URL:** `/auth/register`  
-**Example:**
+-   **Method:** POST
+-   **URL:** `/auth/register`
+-   Example:
 
 ```bash
 curl -X POST http://localhost:5000/auth/register \
@@ -136,19 +136,19 @@ curl -X POST http://localhost:5000/auth/register \
 -d '{"username": "john_doe", "password": "SecureP@ssw0rd", "email": "john@example.com", "first_name": "John", "last_name": "Doe"}'
 ```
 
-**_Request Body:_**
+**Request Body:**
 
 ```json
 {
-    "username": "string",
-    "password": "string",
-    "email": "test@testmail.com",
-    "first_name": "string",
-    "last_name": "string"
+    "username": "john_doe",
+    "password": "SecureP@ssw0rd",
+    "email": "john@example.com",
+    "first_name": "John",
+    "last_name": "Doe"
 }
 ```
 
-Expected Response:
+**Expected Response:**
 
 ```json
 {
@@ -158,9 +158,9 @@ Expected Response:
 
 #### User Login
 
-Method: POST
-URL: /auth/login
-Example:
+-   **Method:** `POST`
+-   **URL:** `/auth/login`
+-   Example:
 
 ```bash
 curl -X POST http://localhost:5000/auth/login \
@@ -168,7 +168,16 @@ curl -X POST http://localhost:5000/auth/login \
 -d '{"username": "john_doe", "password": "SecureP@ssw0rd"}'
 ```
 
-Expected Response:
+**Request Body**
+
+```json
+{
+    "username": "john_doe",
+    "password": "SecureP@ssw0rd"
+}
+```
+
+**Expected Response:**
 
 ```json
 {
@@ -176,11 +185,11 @@ Expected Response:
 }
 ```
 
-#### Request Password Reset
+#### Forgot Password
 
-Method: POST
-URL: /auth/forgot-password
-Example:
+-   Method: POST
+-   URL: /auth/forgot-password
+-   Example:
 
 ```bash
 
@@ -189,7 +198,15 @@ curl -X POST http://localhost:5000/auth/forgot-password \
 -d '{"email": "john@example.com"}'
 ```
 
-Expected Response:
+**Request Body**
+
+```json
+{
+    "email": "john@example.com"
+}
+```
+
+**Expected Response:**
 
 ```json
 {
@@ -199,9 +216,9 @@ Expected Response:
 
 #### Reset Password
 
-Method: POST
-URL: /auth/reset-password
-Example:
+-   Method: POST
+-   URL: /auth/reset-password
+-   Example:
 
 ```bash
 
@@ -210,7 +227,16 @@ curl -X POST http://localhost:5000/auth/reset-password \
 -d '{"token": "reset_token", "new_password": "NewSecureP@ssw0rd"}'
 ```
 
-Expected Response:
+**Request Body**
+
+```json
+{
+    "token": "reset_token",
+    "new_password": "NewSecureP@ssw0rd"
+}
+```
+
+**Expected Response:**
 
 ```json
 {
@@ -220,9 +246,9 @@ Expected Response:
 
 #### Change Password
 
-Method: POST
-URL: /auth/change-password
-Example:
+-   Method: POST
+-   URL: /auth/change-password
+-   Example:
 
 ```bash
 
@@ -232,7 +258,16 @@ curl -X POST http://localhost:5000/auth/change-password \
 -d '{"current_password": "SecureP@ssw0rd", "new_password": "NewSecureP@ssw0rd"}'
 ```
 
-Expected Response:
+**Request Body**
+
+```json
+{
+    "current_password": "SecureP@ssw0rd",
+    "new_password": "NewSecureP@ssw0rd"
+}
+```
+
+**Expected Response:**
 
 ```json
 {
@@ -242,9 +277,9 @@ Expected Response:
 
 #### Get All Users
 
-Method: GET
-URL: /users/
-Example:
+-   Method: GET
+-   URL: /users/
+-   Example:
 
 ```bash
 
@@ -252,7 +287,13 @@ curl -X GET http://localhost:5000/users/ \
 -H "Authorization: Bearer your_jwt_token"
 ```
 
-Expected Response:
+**Request Header**
+
+```http
+Authorization: Bearer your_jwt_token
+```
+
+**Expected Response:**
 
 ```json
 [
@@ -273,9 +314,9 @@ Expected Response:
 
 #### Get User by ID
 
-Method: GET
-URL: /users/<id>
-Example:
+-   Method: GET
+-   URL: /users/{id}
+-   Example:
 
 ```bash
 
@@ -283,7 +324,13 @@ curl -X GET http://localhost:5000/users/1 \
 -H "Authorization: Bearer your_jwt_token"
 ```
 
-Expected Response:
+**Request Header**
+
+```http
+Authorization: Bearer your_jwt_token
+```
+
+**Expected Response:**
 
 ```json
 {
@@ -301,9 +348,9 @@ Expected Response:
 
 #### Update User
 
-Method: PUT
-URL: /users/<id>
-Example:
+-   Method: PUT
+-   URL: /users/{id}
+-   Example:
 
 ```bash
 
@@ -313,7 +360,26 @@ curl -X PUT http://localhost:5000/users/1 \
 -d '{"username": "john_doe", "email": "john@example.com", "first_name": "John", "last_name": "Doe", "role": "User", "is_active": false}'
 ```
 
-Expected Response:
+**Request Header**
+
+```http
+Authorization: Bearer your_jwt_token
+```
+
+**Request Body**
+
+```json
+{
+    "username": "john_doe",
+    "email": "john@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "User",
+    "is_active": false
+}
+```
+
+**Expected Response:**
 
 ```json
 {
@@ -331,9 +397,9 @@ Expected Response:
 
 #### Delete User
 
-Method: DELETE
-URL: /users/<id>
-Example:
+-   Method: DELETE
+-   URL: /users/{id}
+-   Example:
 
 ```bash
 
@@ -341,7 +407,13 @@ curl -X DELETE http://localhost:5000/users/1 \
 -H "Authorization: Bearer your_jwt_token"
 ```
 
-Expected Response:
+**Request Header**
+
+```http
+Authorization: Bearer your_jwt_token
+```
+
+**Expected Response:**
 
 ```json
 {
@@ -351,9 +423,9 @@ Expected Response:
 
 #### Promote User to Admin
 
-Method: POST
-URL: /users/promote/<id>
-Example:
+-   Method: POST
+-   URL: /users/promote/{id}
+-   Example:
 
 ```bash
 
@@ -361,7 +433,13 @@ curl -X POST http://localhost:5000/users/promote/1 \
 -H "Authorization: Bearer your_jwt_token"
 ```
 
-Expected Response:
+**Request Header**
+
+```http
+Authorization: Bearer your_jwt_token
+```
+
+**Expected Response:**
 
 ```json
 {
@@ -378,8 +456,9 @@ Expected Response:
 
 To run the application in development mode:
 
-export FLASK_ENV=development
-python run.py
+`export FLASK_ENV=development`
+<br>
+`python run.py`
 
 ## Testing
 
