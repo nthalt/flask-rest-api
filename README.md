@@ -2,17 +2,38 @@
 
 This project is a JSON RESTful API built with Flask, following OpenAPI standards. It uses PostgreSQL with SQLAlchemy for database management and includes user authentication and management features.
 
-## Task Description
+-   [Desription](#description)
+-   [Features](#features)
+-   [Setup and Installation](#setup-and-installation)
+-   [API Documentation](#api-documentation)
+    -   [Authentication](#authentication)
+        -   [Register](#register-a-new-user)
+        -   [Login](#user-login)
+        -   [Forgot Password](#request-password-reset)
+        -   [Reset Password](#reset-password)
+        -   [Change password](#change-password)
+    -   [Users](#users)
+        -   [Get all users](#get-all-users)
+        -   [Get user by id](#get-user-by-id)
+        -   [Update user](#update-user)
+        -   [Delete user](#delete-user)
+        -   [Promote user to admin](#promote-user-to-admin)
+-   [User Roles and Permissions](#user-roles-and-permissions)
+-   [Development](#development)
+-   [Contributing](#contributing)
 
-The API is built using Flask and PostgreSQL with SQLAlchemy. It provides user management functionalities including registration, sign-in, password reset, and admin-level user management.
+## Description
+
+The API is built using Flask and PostgreSQL with SQLAlchemy. It provides user management functionalities including registration, sign-in, password forget, password reset and admin-level user management.
 
 ## Features
 
 1. Utilizes appropriate REST methods
-2. Uses SQLAlchemy and PostgreSQL for database models and schema
-3. Implements user registration, sign-in, and password reset functionalities
+2. Uses SQLAlchemy and PostgreSQL for database models and schema. Database and table will be automatically created if it does not exist
+3. Implements user registration, sign-in, password forget, password reset functionalities
 4. Admin users can modify, delete, activate, and deactivate non-admin users
-5. User information stored includes:
+5. Admin can make other user admin, but cannot modify other existing admin
+6. User information stored includes:
     - Username (varchar)
     - User First Name (varchar)
     - User Last Name (varchar)
@@ -22,20 +43,22 @@ The API is built using Flask and PostgreSQL with SQLAlchemy. It provides user ma
     - Create date (datetime, auto-insert)
     - Update date (datetime, auto-update during REST API calls)
     - Active status (Boolean)
-6. Implements JWT Token authentication
+7. Implements JWT Token authentication
 
 ## Setup and Installation
 
 1. Clone the repository:
 
-git clone <https://github.com/nthalt/flask-rest-api.git>
-cd <flask-rest-api>
+```bash
+git clone https://github.com/nthalt/flask-rest-api.git
+cd flask-rest-api
+```
 
 2. Create and activate a virtual environment:
 
 ```python
 python -m venv venv
-source venv/bin/activate  # On Windows use venv\Scripts\activate
+source venv/bin/activate  # On Windows use: source venv\Scripts\activate
 ```
 
 3. Install the required packages:
@@ -73,7 +96,7 @@ python run.py create_admin
 
 ## API Documentation
 
-The API follows OpenAPI standards and provides JSON responses. You can access the Swagger UI documentation at `/swagger/` when running the application.
+The API follows OpenAPI standards and provides JSON responses. You can access the Swagger UI documentation at `http://127.0.0.1:5000/` when running the application.
 
 ### Endpoints
 
@@ -88,10 +111,10 @@ The API follows OpenAPI standards and provides JSON responses. You can access th
 #### Users
 
 -   **GET /users/** - Get all users (Admin only)
--   **GET /users/<id>** - Get user by ID (Admin or own user)
--   **PUT /users/<id>** - Update user (Admin or own user)
--   **DELETE /users/<id>** - Delete user (Admin only)
--   **POST /users/promote/<id>** - Promote user to Admin (Admin only)
+-   **GET /users/:id** - Get user by ID (Admin or own user)
+-   **PUT /users/:id** - Update user (Admin or own user)
+-   **DELETE /users/:id** - Delete user (Admin only)
+-   **POST /users/promote/:id** - Promote user to Admin (Admin only)
 
 ### Authentication
 
@@ -111,6 +134,18 @@ Authorization: Bearer <your_jwt_token>
 curl -X POST http://localhost:5000/auth/register \
 -H "Content-Type: application/json" \
 -d '{"username": "john_doe", "password": "SecureP@ssw0rd", "email": "john@example.com", "first_name": "John", "last_name": "Doe"}'
+```
+
+**_Request Body:_**
+
+```json
+{
+    "username": "string",
+    "password": "string",
+    "email": "test@testmail.com",
+    "first_name": "string",
+    "last_name": "string"
+}
 ```
 
 Expected Response:
@@ -348,11 +383,44 @@ python run.py
 
 ## Testing
 
-(Include information about running tests once they are implemented)
-
 ## Contributing
 
-(Include guidelines for contributing to the project)
+We welcome contributions to this project. To ensure a smooth collaboration, please follow these guidelines:
+
+1. **Fork the Repository**: Start by forking the repository on GitHub.
+
+2. **Clone the Repository**: Clone your forked repository to your local machine using:
+
+    ```bash
+    git clone https://github.com/your-username/flask-rest-api.git
+    ```
+
+3. **Create a Branch**: Create a new branch for your feature or bug fix:
+
+    ```bash
+    git checkout -b feature-or-bugfix-description
+    ```
+
+4. **Make Changes**: Implement your changes in the codebase. Ensure your code adheres to the project's coding standards and includes appropriate tests.
+
+5. **Commit Changes**: Commit your changes with a clear and descriptive commit message:
+
+    ```bash
+    git add .
+    git commit -m "Description of the feature or bug fix"
+    ```
+
+6. **Push to GitHub**: Push your branch to your forked repository on GitHub:
+
+    ```bash
+    git push origin feature-or-bugfix-description
+    ```
+
+7. **Create a Pull Request**: Go to the original repository on GitHub and create a pull request. Provide a clear and detailed description of your changes.
+
+8. **Review Process**: Wait for the project maintainers to review your pull request. Be prepared to make any necessary changes based on feedback.
+
+Thank you for your contributions! Your help is greatly appreciated.
 
 ## License
 
