@@ -19,7 +19,6 @@ This project is a JSON RESTful API built with Flask, following OpenAPI standards
         -   [Delete user](#delete-user)
         -   [Promote user to admin](#promote-user-to-admin)
 -   [User Roles and Permissions](#user-roles-and-permissions)
--   [Development](#development)
 -   [Contributing](#contributing)
 
 ## Description
@@ -56,36 +55,31 @@ cd flask-rest-api
 
 2. Create and activate a virtual environment:
 
-```python
+```bash
 python -m venv venv
 source venv/bin/activate  # On Windows use: source venv\Scripts\activate
 ```
 
 3. Install the required packages:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
-5. Create a file named .env in project root and copy your own configuration values into it according to the format provided in .env.example
+5. Create a file named `.env` in project root and copy your own configuration values into it according to the format provided in `.env.example`
 
 ```bash
 cp .env.example .env
 ```
 
-4. Set up your PostgreSQL database and update the `.env` file with your database URL:
+5. Run the application:
 
-```
-DATABASE_URL=postgresql://DATABASE_username:DATABASE_password@localhost:5432/DATABASE_name
-```
-
-6. Run the application:
-
-```
+```bash
 python run.py run
 ```
 
 The application will create the necessary database and tables if they don't exist.
+The application will be available at [http://127.0.0.1:5000](http://127.0.0.1:5000/)
 
 To create an admin user:
 
@@ -319,7 +313,6 @@ Authorization: Bearer your_jwt_token
         "created_at": "2024-07-05T12:00:00Z",
         "updated_at": "2024-07-05T12:00:00Z"
     }
-    // more users
 ]
 ```
 
