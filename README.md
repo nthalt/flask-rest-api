@@ -67,17 +67,16 @@ source venv/bin/activate  # On Windows use: source venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+5. Create a file named .env in project root and copy your own configuration values into it according to the format provided in .env.example
+
+```bash
+cp .env.example .env
+```
+
 4. Set up your PostgreSQL database and update the `.env` file with your database URL:
 
 ```
 DATABASE_URL=postgresql://DATABASE_username:DATABASE_password@localhost:5432/DATABASE_name
-```
-
-5. Set other environment variables in the `.env` file:
-
-```
-SECRET_KEY=your_secret_key
-JWT_SECRET_KEY=your_jwt_secret_key
 ```
 
 6. Run the application:
@@ -118,9 +117,9 @@ The API follows OpenAPI standards and provides JSON responses. You can access th
 
 ### Authentication
 
-The API uses JWT tokens for authentication. Include the token in the Authorization header of your requests:
+The API uses JWT tokens for authentication. Include the token in the Authorization header of your requests according to the format:
 
-Authorization: Bearer <your_jwt_token>
+Authorization: Bearer your_jwt_token
 
 ### Testing Instructions
 
@@ -128,7 +127,8 @@ Authorization: Bearer <your_jwt_token>
 
 -   **Method:** POST
 -   **URL:** `/auth/register`
--   Example:
+
+**Example:**
 
 ```bash
 curl -X POST http://localhost:5000/auth/register \
@@ -160,7 +160,8 @@ curl -X POST http://localhost:5000/auth/register \
 
 -   **Method:** `POST`
 -   **URL:** `/auth/login`
--   Example:
+
+**Example:**
 
 ```bash
 curl -X POST http://localhost:5000/auth/login \
@@ -189,7 +190,8 @@ curl -X POST http://localhost:5000/auth/login \
 
 -   Method: POST
 -   URL: /auth/forgot-password
--   Example:
+
+**Example:**
 
 ```bash
 
@@ -218,7 +220,8 @@ curl -X POST http://localhost:5000/auth/forgot-password \
 
 -   Method: POST
 -   URL: /auth/reset-password
--   Example:
+
+**Example:**
 
 ```bash
 
@@ -248,7 +251,8 @@ curl -X POST http://localhost:5000/auth/reset-password \
 
 -   Method: POST
 -   URL: /auth/change-password
--   Example:
+
+**Example:**
 
 ```bash
 
@@ -256,6 +260,12 @@ curl -X POST http://localhost:5000/auth/change-password \
 -H "Authorization: Bearer your_jwt_token" \
 -H "Content-Type: application/json" \
 -d '{"current_password": "SecureP@ssw0rd", "new_password": "NewSecureP@ssw0rd"}'
+```
+
+**Request Header**
+
+```http
+Authorization: Bearer your_jwt_token
 ```
 
 **Request Body**
@@ -279,7 +289,8 @@ curl -X POST http://localhost:5000/auth/change-password \
 
 -   Method: GET
 -   URL: /users/
--   Example:
+
+**Example:**
 
 ```bash
 
@@ -316,7 +327,8 @@ Authorization: Bearer your_jwt_token
 
 -   Method: GET
 -   URL: /users/{id}
--   Example:
+
+**Example:**
 
 ```bash
 
@@ -350,7 +362,8 @@ Authorization: Bearer your_jwt_token
 
 -   Method: PUT
 -   URL: /users/{id}
--   Example:
+
+**Example:**
 
 ```bash
 
@@ -399,7 +412,8 @@ Authorization: Bearer your_jwt_token
 
 -   Method: DELETE
 -   URL: /users/{id}
--   Example:
+
+**Example:**
 
 ```bash
 
@@ -425,7 +439,8 @@ Authorization: Bearer your_jwt_token
 
 -   Method: POST
 -   URL: /users/promote/{id}
--   Example:
+
+**Example:**
 
 ```bash
 
@@ -451,16 +466,6 @@ Authorization: Bearer your_jwt_token
 
 -   **User**: Can view and edit their own information
 -   **Admin**: Can view, edit, delete, and promote all users (except deleting other admins)
-
-## Development
-
-To run the application in development mode:
-
-`export FLASK_ENV=development`
-<br>
-`python run.py`
-
-## Testing
 
 ## Contributing
 
@@ -500,7 +505,3 @@ We welcome contributions to this project. To ensure a smooth collaboration, plea
 8. **Review Process**: Wait for the project maintainers to review your pull request. Be prepared to make any necessary changes based on feedback.
 
 Thank you for your contributions! Your help is greatly appreciated.
-
-## License
-
-(Include license information)
